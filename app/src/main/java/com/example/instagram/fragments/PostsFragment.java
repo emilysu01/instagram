@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.instagram.EndlessRecyclerViewScrollListener;
 import com.example.instagram.MainActivity;
 import com.example.instagram.Post;
 import com.example.instagram.PostsAdapter;
@@ -43,6 +44,8 @@ public class PostsFragment extends Fragment {
 
     public static final String TAG = "PostsFragment";
     RecyclerView rvPosts;
+
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     protected PostsAdapter adapter;
     protected List<Post> allPosts = new ArrayList<>();
@@ -86,7 +89,20 @@ public class PostsFragment extends Fragment {
         adapter = new PostsAdapter(getContext(), allPosts);
 
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(linearLayoutManager);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
+
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 
@@ -108,9 +124,15 @@ public class PostsFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         queryPosts();
+    }
 
-
-
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        queryPosts();
     }
 
     protected void queryPosts() {
@@ -119,7 +141,6 @@ public class PostsFragment extends Fragment {
 
         // Get the full details of the user who made the post
         query.include(Post.KEY_USER);
-
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
 

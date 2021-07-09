@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.instagram.MainActivity;
@@ -108,6 +109,12 @@ public class ComposeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // on some click or some loading we need to wait for...
+        ProgressBar pb = (ProgressBar) view.findViewById(R.id.pbLoading);
+        pb.setVisibility(ProgressBar.VISIBLE);
+        // run a background job and once complete
+        pb.setVisibility(ProgressBar.INVISIBLE);
 
         // Fragment doesn't extend Context, so we have to prepend the findViewById method with view.
         etDescription = view.findViewById(R.id.etDescription);
