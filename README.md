@@ -40,19 +40,20 @@ The following **stretch** features are implemented:
 The following **additional** features are implemented:
 
 - [x] User can double tap to like.
+- [x] User can upload a picture from camera roll to post.
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1. 
-2.
+1. I created functions within classes to reuse code, but I feel that there were blocks of code I repeated between classes - I'd love to see how others modularized their code.
+2. I'd also love to see how others improved the UI.
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [Kap](https://getkap.co/).
+GIF created with [LICEcap](https://www.cockos.com/licecap/).
 
 ## Credits
 
@@ -64,7 +65,12 @@ List an 3rd party libraries, icons, graphics, or other assets you used in your a
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Learned:
+- How to use Fragments
+- Used different UI layouts (Linear, Relative, Grid, etc.)
+
+Challenges:
+- Initially struggled to understand fragments, but was able to learn hands on by working on this project.
 
 ## License
 
