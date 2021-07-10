@@ -12,14 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.instagram.EndlessRecyclerViewScrollListener;
 import com.example.instagram.Post;
-import com.example.instagram.PostsAdapter;
 import com.example.instagram.ProfilePostsAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
@@ -33,14 +29,17 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
-    RecyclerView rvPosts;
-    ImageView ivProfilePic;
-    TextView tvUsername;
-
+    // Constants
     public static final String TAG = "ProfileFragment";
 
-    protected ProfilePostsAdapter adapter;
-    protected List<Post> allPosts = new ArrayList<>();
+    // UI components
+    ImageView ivProfilePic;
+    TextView tvUsername;
+    RecyclerView rvPosts;
+
+    // Adapter and data model
+    ProfilePostsAdapter adapter;
+    List<Post> allPosts = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,12 +52,14 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Retrieve UI components
         ivProfilePic = view.findViewById(R.id.ivProfilePic);
         tvUsername = view.findViewById(R.id.tvUsername);
         rvPosts = view.findViewById(R.id.rvPosts);
 
+        // Set UI components
         ParseFile profilePic = ParseUser.getCurrentUser().getParseFile("profilePic");
-        Log.i(TAG, "username " + ParseUser.getCurrentUser().getParseFile("profilePic"));
+        // Display the user's profile picture or the empty profile picture
         if (profilePic != null) {
             Glide.with(this)
                     .load(profilePic.getUrl())
@@ -71,26 +72,26 @@ public class ProfileFragment extends Fragment {
                     .circleCrop()
                     .into(ivProfilePic);
         }
-
         tvUsername.setText("@" + ParseUser.getCurrentUser().getUsername());
 
+        // Set up adapter
         adapter = new ProfilePostsAdapter(getContext(), allPosts);
-
         rvPosts.setAdapter(adapter);
-
         rvPosts.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
+        // Populate profile
         queryPosts();
     }
 
     protected void queryPosts() {
+        // Initialize query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
-        // Get the full details of the user who made the post
+        // Get all the posts the current user made
         query.include(Post.KEY_USER);
-        query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.setLimit(20);
 
         // getInBackground is used to retrieve a single item from the backend
         // findInBackground is used to retrieve all items from the backend
@@ -101,13 +102,10 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-                for (Post post : posts) {
-                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
+                // Add all retrieved posts to data model and notify adapter
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
             }
         });
-
     }
 }

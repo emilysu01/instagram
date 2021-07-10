@@ -16,8 +16,10 @@ import com.parse.ParseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
+    // Constants
     public static final String TAG = "LoginActivity";
 
+    // UI components
     EditText etUsername;
     EditText etPassword;
     Button btnLogin;
@@ -27,14 +29,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Checks if a user is already logged in
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
 
+        // Retrieve UI components
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
+        // Set onClickListeners
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

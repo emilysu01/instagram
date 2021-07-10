@@ -1,15 +1,11 @@
 package com.example.instagram;
 
-import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.parceler.Parcel;
-
-import java.io.Serializable;
-import java.util.Date;
 
 @ParseClassName("Post")
 @Parcel(analyze=Post.class)
@@ -46,10 +42,6 @@ public class Post extends ParseObject {
 
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
-    }
-
-    public String getKeyCreatedAt() {
-        return getString(KEY_CREATED_AT);
     }
 
     public String getTimeStamp() {

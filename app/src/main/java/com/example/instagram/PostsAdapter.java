@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,10 +26,16 @@ import java.util.Locale;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
+    // Constants
+    public static final String TAG = "PostsAdapter";
+    private static final int SECOND_MILLIS = 1000;
+    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    // Context and data model
     private Context context;
     private List<Post> posts;
-
-    public static final String TAG = "PostsAdapter";
 
     public PostsAdapter(Context context, List<Post> posts) {
         this.context = context;
@@ -58,6 +62,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        // UI components
         ImageView ivProfilePic;
         TextView tvUsername;
         ImageView ivPicture;
@@ -66,13 +71,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView ivLike;
         TextView tvNumLikes;
 
+        // Current post
         Post post;
-
-        final FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            // Retrieve UI components
             ivProfilePic = itemView.findViewById(R.id.ivProfilePic);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             ivPicture = itemView.findViewById(R.id.ivPicture);
@@ -85,14 +90,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         // Bind the post data into the view elements
         public void bind(Post post) {
             this.post = post;
-
+            // Display the user's profile picture or the empty profile picture
             ParseFile profilePic = post.getProfilePic();
             if (profilePic != null) {
                 Glide.with(context)
                         .load(profilePic.getUrl())
                         .circleCrop()
                         .into(ivProfilePic);
-                Log.i(TAG, "url " + profilePic.getUrl());
             } else {
                 Glide.with(context)
                         .load(context.getResources().getDrawable(R.drawable.emptyprofilepic))
@@ -100,7 +104,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                         .into(ivProfilePic);
             }
             tvUsername.setText("@" + post.getUser().getUsername());
-
             ParseFile postPic = post.getImage();
             if (postPic != null) {
                 Glide.with(context)
@@ -113,7 +116,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             Glide.with(context)
                     .load(context.getResources().getDrawable(R.drawable.ufi_heart))
                     .into(ivLike);
-
             formatLikes();
             ivPicture.setOnClickListener(new DoubleClickListener() {
                 @Override
@@ -125,7 +127,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     formatLikes();
                 }
             });
-
             ivPicture.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -143,6 +144,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
 
         private void openPostDetail() {
+            // Create intent to display post detail activity
             Intent intent = new Intent(context, PostDetailActivity.class);
             intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
             context.startActivity(intent);
@@ -174,16 +176,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-
     public String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
-
         try {
             long time = sf.parse(rawJsonDate).getTime();
             long now = System.currentTimeMillis();
@@ -208,8 +204,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             Log.i(TAG, "getRelativeTimeAgo failed");
             e.printStackTrace();
         }
-
         return "";
     }
-
 }

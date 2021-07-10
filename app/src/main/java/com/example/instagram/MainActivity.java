@@ -8,21 +8,21 @@ import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.instagram.fragments.ComposeFragment;
 import com.example.instagram.fragments.PostsFragment;
 import com.example.instagram.fragments.ProfileFragment;
+import com.example.instagram.fragments.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
-
+    // UI components
     BottomNavigationView bottomNavigation;
 
+    // Fragment manager
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
@@ -30,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Retrieve UI components
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
+        // Set up onItemSelectedListener
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

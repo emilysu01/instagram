@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
  * @version	1.0
  * @since	2014-09-15
  */
+
 public abstract class DoubleClickListener implements OnClickListener {
 
     // The time in which the second tap should be done in order to qualify as

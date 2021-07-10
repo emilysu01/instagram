@@ -2,12 +2,10 @@ package com.example.instagram;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +20,14 @@ import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
 
+    // Constants
+    public static final String TAG = "PostDetailActivity";
+    private static final int SECOND_MILLIS = 1000;
+    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    // UI components
     ImageView ivProfilePic;
     TextView tvUsername;
     ImageView ivPicture;
@@ -30,7 +36,7 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageView ivLike;
     TextView tvNumLikes;
 
-    public static final String TAG = "PostDetailActivity";
+    // Current post
     Post post;
 
     @Override
@@ -38,8 +44,10 @@ public class PostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
 
+        // Unwrap current post from intent
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
 
+        // Retrieve UI components
         ivProfilePic = findViewById(R.id.ivProfilePic);
         tvUsername = findViewById(R.id.tvUsername);
         ivPicture = findViewById(R.id.ivPicture);
@@ -48,11 +56,13 @@ public class PostDetailActivity extends AppCompatActivity {
         ivLike = findViewById(R.id.ivLike);
         tvNumLikes = findViewById(R.id.tvNumLikes);
 
+        // Update UI
         updateUI();
     }
 
     public void updateUI() {
         ParseFile profilePic = post.getProfilePic();
+        // Display the user's profile picture or the empty profile picture
         if (profilePic != null) {
             Glide.with(this)
                     .load(profilePic.getUrl())
@@ -65,7 +75,6 @@ public class PostDetailActivity extends AppCompatActivity {
                     .into(ivProfilePic);
         }
         tvUsername.setText("@" + post.getUser().getUsername());
-
         ParseFile postPic = post.getImage();
         if (postPic != null) {
             Glide.with(this)
@@ -78,7 +87,6 @@ public class PostDetailActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(getResources().getDrawable(R.drawable.ufi_heart))
                 .into(ivLike);
-
         formatLikes();
         ivPicture.setOnClickListener(new DoubleClickListener() {
             @Override
@@ -90,10 +98,10 @@ public class PostDetailActivity extends AppCompatActivity {
                 formatLikes();
             }
         });
-
     }
 
     public void formatLikes() {
+        // Formatting likes (don't display if 0 likes, otherwise display the number of likes)
         Spanned formattedlikes;
         int numLikes = post.getLikes();
         if (numLikes == 0) {
@@ -105,11 +113,8 @@ public class PostDetailActivity extends AppCompatActivity {
         }
         tvNumLikes.setText(formattedlikes);
     }
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
+    // Provided by CodePath
     public String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -139,9 +144,6 @@ public class PostDetailActivity extends AppCompatActivity {
             Log.i(TAG, "getRelativeTimeAgo failed");
             e.printStackTrace();
         }
-
         return "";
     }
-
-
 }
