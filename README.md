@@ -70,7 +70,7 @@ Learned:
 - Used different UI layouts (Linear, Relative, Grid, etc.)
 
 Challenges:
-- Initially struggled to understand fragments, but was able to learn hands on by working on this project.
+- Initially struggled to understand fragments, but was able to learn hands on by working on this project
 
 ## License
 
